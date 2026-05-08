@@ -38,6 +38,109 @@ Clase predicha + Nivel de confianza
 
 ---
 
+## 2. Dataset
+
+Debido al tamaño del dataset, las imágenes originales no se incluyen en este repositorio.
+
+El proyecto utiliza el dataset público:
+
+**Road Damage Dataset (YOLO format)**  
+Autor: `alvarobasily` en Kaggle
+
+### Descarga del dataset
+
+Descargar desde:
+
+https://www.kaggle.com/datasets/alvarobasily/road-damage
+
+### Estructura esperada
+
+Después de descargar el dataset, colocar los archivos en:
+
+```bash
+data/raw/
+```
+
+La carpeta debe contener imágenes y archivos `.txt` en formato YOLO:
+
+```text
+data/raw/
+├── image_001.jpg
+├── image_001.txt
+├── image_002.jpg
+├── image_002.txt
+└── ...
+```
+
+Cada archivo `.txt` contiene anotaciones en formato:
+
+```text
+class_id x_center y_center width height
+```
+
+### Organización automática del dataset
+
+El proyecto incluye un script para organizar automáticamente las imágenes por clase y generar el split train/validation (80/20):
+
+```bash
+python organize_dataset.py
+```
+
+Esto generará automáticamente:
+
+```text
+data/processed/
+├── train/
+│   ├── pothole/
+│   ├── longitudinal_crack/
+│   ├── transverse_crack/
+│   └── alligator_crack/
+└── val/
+    ├── pothole/
+    ├── longitudinal_crack/
+    ├── transverse_crack/
+    └── alligator_crack/
+```
+
+### Notas importantes
+
+- El dataset original contiene anotaciones en formato YOLO.
+- El script `organize_dataset.py` selecciona la clase dominante de cada imagen.
+- El split se realiza de forma reproducible usando `random seed = 42`.
+- El modelo entrenado `.keras` sí está incluido en este repositorio y puede utilizarse directamente para inferencia sin necesidad de reentrenamiento.
+
+---
+
+## 3. Cómo Ejecutar
+
+## Requisitos previos
+- Python 3.10
+- Anaconda (recomendado)
+
+## Instalación del entorno
+
+```bash
+# 1. Crear entorno conda
+conda create -n road_damage python=3.10 -y
+conda activate road_damage
+
+# 2. Instalar dependencias
+pip install -r requirements.txt
+```
+
+## Inferencia (uso principal)
+
+```bash
+# Activar entorno
+conda activate road_damage
+
+# Ejecutar inferencia sobre una imagen
+python scripts/run_inference.py --input ruta/a/imagen.jpg
+```
+
+> ⚠️ **El modelo ya está entrenado y guardado en `models/`.**  
+> No se requiere reentrenamiento para evaluar el sistema.
+
 ## 2. Cómo Ejecutar
 
 ### Requisitos previos
@@ -76,7 +179,7 @@ python scripts/run_inference.py --input ruta/a/imagen.jpg
 
 ---
 
-## 3. Estructura del Proyecto
+## 4. Estructura del Proyecto
 
 ```
 road_damage_classifier/
@@ -123,7 +226,7 @@ road_damage_classifier/
 
 ---
 
-## 4. Ejemplo de Uso
+## 5. Ejemplo de Uso
 
 ### Caso 1 — Imagen con bache
 ```bash
@@ -162,7 +265,7 @@ python -m src.models.evaluate
 
 ---
 
-## 5. Resultados Esperados
+## 6. Resultados Esperados
 
 ### Métricas del modelo final
 
